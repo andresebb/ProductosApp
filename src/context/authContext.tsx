@@ -1,8 +1,6 @@
 import React, {createContext, useEffect, useReducer} from 'react';
 import cafeApi from '../api/cafeApi';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// import cafeApi from '../api/cafeApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   Usuario,
@@ -36,15 +34,20 @@ export const AuthContext = createContext({} as AuthContextProps);
 export const AuthProvider = ({children}: any) => {
   const [state, dispatch] = useReducer(authReducer, authInicialState);
 
-  // useEffect(() => {
-  //   checkToken();
-  // }, []);
+  useEffect(() => {
+    checkToken();
+  }, []);
 
   const checkToken = async () => {
-    // const token = await AsyncStorage.getItem('token');
-    // // No token, no autenticado
-    // if (!token) return dispatch({type: 'notAuthenticated'});
+    const token = await AsyncStorage.getItem('token');
+
+    console.log(token);
+
+    // No token, no autenticado
+    if (!token) return dispatch({type: 'notAuthenticated'});
+
     // // Hay token
+
     // const resp = await cafeApi.get('/auth');
     // if (resp.status !== 200) {
     //   return dispatch({type: 'notAuthenticated'});
@@ -65,6 +68,7 @@ export const AuthProvider = ({children}: any) => {
         correo,
         password,
       });
+
       dispatch({
         type: 'signUp',
         payload: {
@@ -72,6 +76,9 @@ export const AuthProvider = ({children}: any) => {
           user: resp.data.usuario,
         },
       });
+
+      //Saving Token
+      await AsyncStorage.setItem('token', resp.data.token);
     } catch (error) {
       dispatch({
         type: 'addError',
