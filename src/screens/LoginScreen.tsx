@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
+import {StackScreenProps} from '@react-navigation/stack';
+import {loginStyles} from '../theme/LoginTheme';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -10,14 +10,15 @@ import {
   View,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {Background} from '../components/BackGround';
 import {WhiteLogo} from '../components/WhiteLogo';
 import {useForm} from '../hooks/useForm';
-import {loginStyles} from '../theme/LoginTheme';
+import {Background} from '../components/Background';
 
 interface Props extends StackScreenProps<any, any> {}
 
 export const LoginScreen = ({navigation}: Props) => {
+  console.log('sii');
+
   const {email, password, onChange} = useForm({
     email: '',
     password: '',
@@ -86,7 +87,7 @@ export const LoginScreen = ({navigation}: Props) => {
               <Text style={loginStyles.buttonText}>Login</Text>
             </TouchableOpacity>
           </View>
-          {}
+          {/* Register Button */}
           <View style={loginStyles.buttonContainer}>
             <TouchableOpacity
               activeOpacity={0.8}
