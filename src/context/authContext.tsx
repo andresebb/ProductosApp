@@ -41,25 +41,25 @@ export const AuthProvider = ({children}: any) => {
   const checkToken = async () => {
     const token = await AsyncStorage.getItem('token');
 
-    console.log(token);
-
     // No token, no autenticado
     if (!token) return dispatch({type: 'notAuthenticated'});
 
     // // Hay token
 
-    // const resp = await cafeApi.get('/auth');
-    // if (resp.status !== 200) {
-    //   return dispatch({type: 'notAuthenticated'});
-    // }
+    const resp = await cafeApi.get('/auth');
+    if (resp.status !== 200) {
+      return dispatch({type: 'notAuthenticated'});
+    }
+
     // await AsyncStorage.setItem('token', resp.data.token);
-    // dispatch({
-    //   type: 'signUp',
-    //   payload: {
-    //     token: resp.data.token,
-    //     user: resp.data.usuario,
-    //   },
-    // });
+
+    dispatch({
+      type: 'signUp',
+      payload: {
+        token: resp.data.token,
+        user: resp.data.usuario,
+      },
+    });
   };
 
   const signIn = async ({correo, password}: LoginData) => {
