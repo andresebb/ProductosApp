@@ -65,7 +65,13 @@ export const AuthProvider = ({children}: any) => {
         correo,
         password,
       });
-      console.log(resp.data);
+      dispatch({
+        type: 'signUp',
+        payload: {
+          token: resp.data.token,
+          user: resp.data.usuario,
+        },
+      });
     } catch (e) {
       console.error(e.response.data);
     }

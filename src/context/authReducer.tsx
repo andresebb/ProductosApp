@@ -35,6 +35,7 @@ export const authReducer = (
       };
 
     case 'signUp':
+      console.log('llegue');
       return {
         ...state,
         errorMessage: '',

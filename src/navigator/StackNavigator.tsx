@@ -2,10 +2,15 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {LoginScreen} from '../screens/LoginScreen';
 import {RegisterScreen} from '../screens/RegisterScreen';
+import {useContext} from 'react';
+import {AuthContext} from '../context/authContext';
+import {ProtectedScreen} from '../screens/ProtectedScreen';
 
 const Stack = createStackNavigator();
 
 export const StackNavigator = () => {
+  const {status} = useContext(AuthContext);
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -14,8 +19,14 @@ export const StackNavigator = () => {
           backgroundColor: 'white',
         },
       }}>
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+      {status !== 'authenticated' ? (
+        <>
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        </>
+      ) : (
+        <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} />
+      )}
     </Stack.Navigator>
   );
 };
