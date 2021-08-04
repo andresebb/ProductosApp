@@ -89,26 +89,26 @@ export const AuthProvider = ({children}: any) => {
   };
 
   const signUp = async ({nombre, correo, password}: RegisterData) => {
-    // try {
-    //   const {data} = await cafeApi.post<LoginResponse>('/usuarios', {
-    //     correo,
-    //     password,
-    //     nombre,
-    //   });
-    //   dispatch({
-    //     type: 'signUp',
-    //     payload: {
-    //       token: data.token,
-    //       user: data.usuario,
-    //     },
-    //   });
-    //   await AsyncStorage.setItem('token', data.token);
-    // } catch (error) {
-    //   dispatch({
-    //     type: 'addError',
-    //     payload: error.response.data.errors[0].msg || 'Revise la información',
-    //   });
-    // }
+    try {
+      const {data} = await cafeApi.post<LoginResponse>('/usuarios', {
+        correo,
+        password,
+        nombre,
+      });
+      dispatch({
+        type: 'signUp',
+        payload: {
+          token: data.token,
+          user: data.usuario,
+        },
+      });
+      await AsyncStorage.setItem('token', data.token);
+    } catch (error) {
+      dispatch({
+        type: 'addError',
+        payload: error.response.data.errors[0].msg || 'Revise la información',
+      });
+    }
   };
 
   const logOut = async () => {

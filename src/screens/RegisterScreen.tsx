@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
+import {StackScreenProps} from '@react-navigation/stack';
+import {AuthContext} from '../context/authContext';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -6,41 +8,42 @@ import {
   Platform,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {WhiteLogo} from '../components/WhiteLogo';
 import {useForm} from '../hooks/useForm';
 import {loginStyles} from '../theme/LoginTheme';
 import {TextInput} from 'react-native-gesture-handler';
-import {StackScreenProps} from '@react-navigation/stack';
 
 interface Props extends StackScreenProps<any, any> {}
 
 export const RegisterScreen = ({navigation}: Props) => {
+  const {signUp, errorMessage, removeError} = useContext(AuthContext);
+
   const {email, password, name, onChange} = useForm({
     name: '',
     email: '',
     password: '',
   });
 
-  // useEffect(() => {
-  //   if (errorMessage.length === 0) return;
+  useEffect(() => {
+    if (errorMessage.length === 0) return;
 
-  //   Alert.alert('Registro incorrecto', errorMessage, [
-  //     {
-  //       text: 'Ok',
-  //       onPress: removeError,
-  //     },
-  //   ]);
-  // }, [errorMessage]);
+    Alert.alert('Registro incorrecto', errorMessage, [
+      {
+        text: 'Ok',
+        onPress: removeError,
+      },
+    ]);
+  }, [errorMessage]);
 
   const onRegister = () => {
-    console.log({email, password, name});
     Keyboard.dismiss();
-    // signUp({
-    //   nombre: name,
-    //   correo: email,
-    //   password,
-    // });
+    signUp({
+      nombre: name,
+      correo: email,
+      password,
+    });
   };
 
   return (
