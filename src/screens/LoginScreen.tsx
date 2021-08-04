@@ -13,20 +13,24 @@ import {TextInput} from 'react-native-gesture-handler';
 import {WhiteLogo} from '../components/WhiteLogo';
 import {useForm} from '../hooks/useForm';
 import {Background} from '../components/Background';
+import {useContext} from 'react';
+import {AuthContext} from '../context/authContext';
 
 interface Props extends StackScreenProps<any, any> {}
 
 export const LoginScreen = ({navigation}: Props) => {
-  console.log('sii');
-
   const {email, password, onChange} = useForm({
     email: '',
     password: '',
   });
 
+  const {signIn} = useContext(AuthContext);
+
   const onLogin = () => {
     console.log({email, password});
     Keyboard.dismiss();
+
+    signIn({correo: email, password});
   };
 
   return (
