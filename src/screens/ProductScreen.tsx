@@ -14,7 +14,8 @@ interface Props
 export const ProductScreen = ({navigation, route}: Props) => {
   const {id = '', name = ''} = route.params;
   const {categories} = useCategories();
-  const {loadProductById} = useContext(ProductsContext);
+  const {loadProductById, updateProduct, addProduct} =
+    useContext(ProductsContext);
 
   const {_id, categoriaId, nombre, img, form, onChange, setFormValue} = useForm(
     {
@@ -27,9 +28,9 @@ export const ProductScreen = ({navigation, route}: Props) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: name ? name : 'Nuevo Producto',
+      title: nombre ? nombre : 'Sin nombre del producto',
     });
-  }, [name]);
+  }, [nombre]);
 
   useEffect(() => {
     loadProduct();
@@ -44,6 +45,18 @@ export const ProductScreen = ({navigation, route}: Props) => {
       img: product.img || '',
       nombre,
     });
+  };
+
+  const saveOrUpdate = async () => {
+    if (id.length > 0) {
+      updateProduct(categoriaId, nombre, id);
+    } else {
+      //Si no mueve las categorias significa que es la primera
+      const tempCategoriaId = categoriaId || categories[0]._id;
+
+      const newProduct = await addProduct(tempCategoriaId, nombre);
+      onChange(newProduct._id, '_id');
+    }
   };
 
   return (
@@ -72,18 +85,21 @@ export const ProductScreen = ({navigation, route}: Props) => {
           ))}
         </Picker>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginTop: 10,
-          }}>
-          <Button title="Cámara" onPress={() => {}} color="#5856D6" />
+        {/* MOSCA */}
+        {_id.length > 0 && (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              marginTop: 10,
+            }}>
+            <Button title="Cámara" onPress={() => {}} color="#5856D6" />
 
-          <View style={{width: 10}} />
+            <View style={{width: 10}} />
 
-          <Button title="Galería" onPress={() => {}} color="#5856D6" />
-        </View>
+            <Button title="Galería" onPress={() => {}} color="#5856D6" />
+          </View>
+        )}
 
         {img.length > 0 && (
           <Image
@@ -96,7 +112,13 @@ export const ProductScreen = ({navigation, route}: Props) => {
           />
         )}
 
-        <Button title="Guardar" onPress={() => {}} color="#5856D6" />
+        <Button
+          title="Guardar"
+          onPress={() => {
+            saveOrUpdate();
+          }}
+          color="#5856D6"
+        />
 
         <Text>{JSON.stringify(form, null, 5)}</Text>
       </ScrollView>
