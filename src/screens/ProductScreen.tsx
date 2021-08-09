@@ -1,13 +1,16 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, Button} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ProductsStackParams} from '../navigator/ProductsNavigator';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
+import {Picker} from '@react-native-picker/picker';
 
 interface Props
   extends StackScreenProps<ProductsStackParams, 'ProductScreen'> {}
 
 export const ProductScreen = ({navigation, route}: Props) => {
+  const [selectedLanguage, setSelectedLanguage] = useState();
+
   const {id = '', name = ''} = route.params;
 
   useEffect(() => {
@@ -33,6 +36,17 @@ export const ProductScreen = ({navigation, route}: Props) => {
 
         {/* Picker / Selector */}
         <Text style={styles.label}>Categoría:</Text>
+
+        <Picker
+          selectedValue={selectedLanguage}
+          onValueChange={(itemValue, itemIndex) =>
+            setSelectedLanguage(itemValue)
+          }>
+          <Picker.Item label="Java" value="java" />
+          <Picker.Item label="JavaScript" value="js" />
+          <Picker.Item label="JavaScript" value="js" />
+          <Picker.Item label="JavaScript" value="js" />
+        </Picker>
 
         <View
           style={{
