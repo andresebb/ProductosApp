@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {Text, View, StyleSheet, Button} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ProductsStackParams} from '../navigator/ProductsNavigator';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import {Picker} from '@react-native-picker/picker';
 import {useCategories} from '../hooks/useCategories';
+import {useForm} from '../hooks/useForm';
+import {ProductsContext} from '../context/ProductsContext';
 
 interface Props
   extends StackScreenProps<ProductsStackParams, 'ProductScreen'> {}
@@ -13,12 +15,37 @@ export const ProductScreen = ({navigation, route}: Props) => {
   const [selectedLanguage, setSelectedLanguage] = useState();
   const {id = '', name = ''} = route.params;
   const {categories} = useCategories();
+  const {loadProductById} = useContext(ProductsContext);
+
+  const {_id, categoriaId, nombre, img, form, onChange, setFormValue} = useForm(
+    {
+      _id: id,
+      categoriaId: '',
+      nombre: name,
+      img: '',
+    },
+  );
 
   useEffect(() => {
     navigation.setOptions({
       title: name ? name : 'Nuevo Producto',
     });
   }, [name]);
+
+  useEffect(() => {
+    loadProduct();
+  }, []);
+
+  const loadProduct = async () => {
+    if (id.length === 0) return;
+    const product = await loadProductById(id);
+    setFormValue({
+      _id: id,
+      categoriaId: product.categoria._id,
+      img: product.img || '',
+      nombre,
+    });
+  };
 
   return (
     <View
@@ -31,8 +58,8 @@ export const ProductScreen = ({navigation, route}: Props) => {
         <TextInput
           placeholder="Producto"
           style={styles.textInput}
-          // value={nombre}
-          // onChangeText={value => onChange(value, 'nombre')}
+          value={nombre}
+          onChangeText={value => onChange(value, 'nombre')}
         />
 
         {/* Picker / Selector */}
@@ -62,6 +89,8 @@ export const ProductScreen = ({navigation, route}: Props) => {
         </View>
 
         <Button title="Guardar" onPress={() => {}} color="#5856D6" />
+
+        <Text>{JSON.stringify(form, null, 5)}</Text>
       </ScrollView>
     </View>
   );
