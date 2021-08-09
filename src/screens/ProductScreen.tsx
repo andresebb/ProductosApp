@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {Text, View, StyleSheet, Button} from 'react-native';
+import {Text, View, StyleSheet, Button, Image} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ProductsStackParams} from '../navigator/ProductsNavigator';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
@@ -12,7 +12,6 @@ interface Props
   extends StackScreenProps<ProductsStackParams, 'ProductScreen'> {}
 
 export const ProductScreen = ({navigation, route}: Props) => {
-  const [selectedLanguage, setSelectedLanguage] = useState();
   const {id = '', name = ''} = route.params;
   const {categories} = useCategories();
   const {loadProductById} = useContext(ProductsContext);
@@ -66,10 +65,8 @@ export const ProductScreen = ({navigation, route}: Props) => {
         <Text style={styles.label}>Categoría:</Text>
 
         <Picker
-          selectedValue={selectedLanguage}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedLanguage(itemValue)
-          }>
+          selectedValue={categoriaId}
+          onValueChange={value => onChange(value, 'categoriaId')}>
           {categories.map(c => (
             <Picker.Item label={c.nombre} value={c._id} key={c._id} />
           ))}
@@ -87,6 +84,17 @@ export const ProductScreen = ({navigation, route}: Props) => {
 
           <Button title="Galería" onPress={() => {}} color="#5856D6" />
         </View>
+
+        {img.length > 0 && (
+          <Image
+            source={{uri: img}}
+            style={{
+              marginVertical: 20,
+              width: '100%',
+              height: 300,
+            }}
+          />
+        )}
 
         <Button title="Guardar" onPress={() => {}} color="#5856D6" />
 
